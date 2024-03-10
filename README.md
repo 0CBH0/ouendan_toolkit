@@ -28,6 +28,6 @@ yyt2_nscr in <file_image> <file_ntft> <file_ntfp> <width>
 Windows
 
 # Dependencies
-imgConvLib
-libimagequant
+- imgConvLib
+- libimagequant
 
