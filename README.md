@@ -24,6 +24,9 @@ yyt2_nscr out <file_image> <file_ntft> <file_ntfp> <width>
 yyt2_nscr in <file_image> <file_ntft> <file_ntfp> <width>
 ~~~
 
+# Platform
+Windows
+
 # Dependencies
 imgConvLib
 libimagequant
