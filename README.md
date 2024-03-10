@@ -20,8 +20,8 @@ yyt2_nscr out <file_image> <file_nscr> <file_ncgr> <file_nclr>
 yyt2_nscr in <file_image> <file_nscr> <file_ncgr> <file_nclr>
 
 # export/import images from *.ntft:
-yyt2_nscr out <file_image> <file_ntft> <file_ntfp> <width>
-yyt2_nscr in <file_image> <file_ntft> <file_ntfp> <width>
+yyt2_ntft out <file_image> <file_ntft> <file_ntfp> <width>
+yyt2_ntft in <file_image> <file_ntft> <file_ntfp> <width>
 ~~~
 
 # Platform
