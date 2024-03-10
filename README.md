@@ -6,7 +6,7 @@ The toolkit used for image handle of ouendan series
 - yyt2_nscr: export/import the image from *.nscr files
 - yyt2_ntft: export/import the image from *.ntft files
 
-# Usage
+## Usage
 ~~~
 # decompress/compress (auto.):
 yyt2_decode <file_name>
@@ -24,10 +24,10 @@ yyt2_ntft out <file_image> <file_ntft> <file_ntfp> <width>
 yyt2_ntft in <file_image> <file_ntft> <file_ntfp> <width>
 ~~~
 
-# Platform
+## Platform
 Windows
 
-# Dependencies
+## Dependencies
 - imgConvLib
 - libimagequant
 
