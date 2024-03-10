@@ -40,6 +40,7 @@ int imgOut(char *imgDirName, char *ncerFileName, char *ncgrFileName, char *nclrF
 	Color bg = nclr.setAlpha();
 	NCERData ncer(ncerFileName);
 	if (ncer.getBankNum() == 0) return -1;
+	//if ((ncer.getFlag() & 3) > 1) printf("sp: %d ", ncer.getFlag() & 3);
 	if (imgDirName[strlen(imgDirName) - 1] == '\\' || imgDirName[strlen(imgDirName) - 1] == '/') imgDirName[strlen(imgDirName) - 1] = '\0';
 	mkdir(imgDirName);
 	char imgName[260];

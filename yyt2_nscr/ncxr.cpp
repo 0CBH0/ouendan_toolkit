@@ -934,11 +934,12 @@ void OAMData::set(const vector<unsigned short> &attrs, unsigned int flags, int l
 	pal_index = (attrs[2] >> 12) & 0x0F;
 	width = calcWidth();
 	height = calcHeight();
-	shift = (flags & 3) > 0 ? 1 : 0;
+	//shift = (flags & 3) > 0 ? 1 : 0;
+	shift = flags & 3;
 	for (unsigned int i = 0; i < shift; i++) tile_index *= 2;
 }
 
-vector<unsigned short>  OAMData::get() const
+vector<unsigned short> OAMData::get() const
 {
 	int temp = 0;
 	vector<unsigned short> attrs(3, 0);
@@ -1253,8 +1254,18 @@ int OAMBank::draw(unsigned int id, NCGRData &ncgr, NCLRData &nclr, bool cover)
 {
 	if (data[id].pal_index > nclr.data.size()) data[id].pal_index = 0;
 	unsigned int tileCol = ncgr.getFlag() != 0 ? ncgr.getWidth() : 0;
-	ImageData ta;
-	TMPToImage(ta, ncgr.data, data[id].toMap(tileCol), nclr.data, data[id].width, data[id].height, 0, ncgr.getDepth() - 3);
+	ImageData ta(data[id].width, data[id].height), ta_tile;
+
+	if (tileCol == 0 || tileCol == 0xFFFF) tileCol = 1;
+	unsigned int tc = width / 8;
+	unsigned int rc = tileCol >= tc ? tc : tileCol;
+	unsigned int pc = tileCol - rc;
+	for (unsigned int i = 0; i < width * height / (unsigned int)0x40; i++)
+	{
+		IPToImage(ta_tile, ncgr.get(data[id].tile_index + i + (i / rc) * pc), nclr.data[data[id].pal_index], 8, 8, ncgr.getDepth() - 3, 1);
+		ta.paste(ta_tile, i % (data[id].width / 8) * 8, i / (data[id].width / 8) * 8);
+	}
+	//TMPToImage(ta, ncgr.data, data[id].toMap(tileCol), nclr.data, data[id].width, data[id].height, 0, ncgr.getDepth() - 3);
 	ImageData tb = ta.flip(data[id].hv_mode);
 	int rec = img.paste(tb, data[id].xpos - x_pos, data[id].ypos - y_pos, cover);
 	ta.release();
@@ -1397,7 +1408,7 @@ int OAMBank::modify(int layer, vector<OAMData> &oamList, char *fileName, NCGRDat
 					if (test)
 					{
 						if (data[i].shift > 0 && tileData[0].size() % 2 != 0) tileData[0].push_back(vector<unsigned char>(tileData[0][0].size(), 0));
-						if (ncgr.getTileNum() + tileData[0].size() <= 0x400)
+						if (ncgr.getTileNum() + tileData[0].size() <= 0x400 * (data[i].shift + 1))
 						{
 							oamTile.tile_index = ncgr.getTileNum();
 							for (auto term : tileData[0]) ncgr.add(term);
@@ -1418,7 +1429,7 @@ int OAMBank::modify(int layer, vector<OAMData> &oamList, char *fileName, NCGRDat
 			else
 			{
 				if (data[i].shift > 0 && tileData[0].size() % 2 != 0) tileData[0].push_back(vector<unsigned char>(tileData[0][0].size(), 0));
-				if (ncgr.getTileNum() + tileData[0].size() <= 0x400)
+				if (ncgr.getTileNum() + tileData[0].size() <= 0x400 * (data[i].shift + 1))
 				{
 					data[i].tile_index = ncgr.getTileNum();
 					for (auto term : tileData[0]) ncgr.add(term);
